@@ -26,6 +26,10 @@ public class Cliente implements Serializable {
 	@Column(name="create_at")
 	@Temporal(TemporalType.DATE)
 	private Date createAt;
+	
+	public Cliente() {
+		super();
+	}
 
 	public Cliente(Long id, String nombre, String apellidos, String email, Date createAt) {
 		super();
@@ -35,7 +39,7 @@ public class Cliente implements Serializable {
 		this.email = email;
 		this.createAt = createAt;
 	}
-
+	
 	public Long getId() {
 		return id;
 	}
