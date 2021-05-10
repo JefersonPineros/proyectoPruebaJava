@@ -43,6 +43,8 @@ public class Cliente implements Serializable {
 	@Temporal(TemporalType.DATE)
 	private Date createAt;
 	
+	private String foto;
+	
 	public Cliente() {
 		super();
 	}
@@ -53,7 +55,7 @@ public class Cliente implements Serializable {
 		this.nombre = nombre;
 		this.apellidos = apellidos;
 		this.email = email;
-		this.createAt = createAt;
+		this.createAt = createAt;		
 	}
 	
 	@PrePersist
@@ -100,6 +102,16 @@ public class Cliente implements Serializable {
 	public void setCreateAt(Date createAt) {
 		this.createAt = createAt;
 	}
+
+
+	public String getFoto() {
+		return foto;
+	}
+
+	public void setFoto(String foto) {
+		this.foto = foto;
+	}
+
 
 	/**
 	 * 
