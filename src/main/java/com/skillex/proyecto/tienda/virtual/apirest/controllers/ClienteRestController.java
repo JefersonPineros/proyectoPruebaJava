@@ -40,7 +40,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.skillex.proyecto.tienda.virtual.apirest.models.entity.Cliente;
+import com.skillex.proyecto.tienda.virtual.apirest.models.entity.Region;
 import com.skillex.proyecto.tienda.virtual.apirest.models.services.IClienteService;
+import com.skillex.proyecto.tienda.virtual.apirest.models.services.IUploadFileService;
 
 @CrossOrigin(origins = { "http://localhost:4200" })
 @RestController
@@ -49,6 +51,9 @@ public class ClienteRestController {
 
 	@Autowired
 	private IClienteService clienteService;
+	
+	@Autowired
+	private IUploadFileService uploadService;
 	
 	private final Logger log = LoggerFactory.getLogger(ClienteRestController.class);
 
@@ -142,7 +147,8 @@ public class ClienteRestController {
 			clienteActual.setNombre(cliente.getNombre());
 			clienteActual.setApellidos(cliente.getApellidos());
 			clienteActual.setEmail(cliente.getEmail());
-
+			clienteActual.setRegion(cliente.getRegion());
+			
 			clienteUpdate = clienteService.save(clienteActual);
 
 		} catch (DataAccessException e) {
@@ -164,13 +170,8 @@ public class ClienteRestController {
 			Cliente cliente = clienteService.findById(id);
 
 			String nombreFotoAnterio = cliente.getFoto();
-			if (nombreFotoAnterio != null && nombreFotoAnterio.length() > 0) {
-				Path rutaFotoAnterior = Paths.get("uploads").resolve(nombreFotoAnterio).toAbsolutePath();
-				File archivoFotoAnterior = rutaFotoAnterior.toFile();
-				if (archivoFotoAnterior.exists() && archivoFotoAnterior.canRead()) {
-					archivoFotoAnterior.delete();
-				}
-			}
+			
+			uploadService.eliminar(nombreFotoAnterio);
 
 			clienteService.delete(id);
 		} catch (DataAccessException e) {
@@ -190,26 +191,18 @@ public class ClienteRestController {
 		Cliente cliente = clienteService.findById(id);
 
 		if (!archivo.isEmpty()) {
-			String nombreArchivo = UUID.randomUUID().toString() + archivo.getOriginalFilename().replace(" ", "");
-			Path rutaArchivo = Paths.get("uploads").resolve(nombreArchivo).toAbsolutePath();
-			log.info(rutaArchivo.toString());
+			String nombreArchivo = null;
 			try {
-				Files.copy(archivo.getInputStream(), rutaArchivo);
+				nombreArchivo = uploadService.copiar(archivo);
 			} catch (IOException e) {
-				response.put("mensaje", "Error al subir la imagen: ".concat(nombreArchivo));
+				response.put("mensaje", "Error al subir la imagen ");
 				response.put("error", e.getMessage().concat(":").concat(e.getCause().getMessage()));
 				return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 			}
 
 			String nombreFotoAnterio = cliente.getFoto();
-			if (nombreFotoAnterio != null && nombreFotoAnterio.length() > 0) {
-				Path rutaFotoAnterior = Paths.get("uploads").resolve(nombreFotoAnterio).toAbsolutePath();
-				File archivoFotoAnterior = rutaFotoAnterior.toFile();
-				if (archivoFotoAnterior.exists() && archivoFotoAnterior.canRead()) {
-					archivoFotoAnterior.delete();
-				}
-			}
-
+			uploadService.eliminar(nombreFotoAnterio);
+			
 			cliente.setFoto(nombreArchivo);
 
 			clienteService.save(cliente);
@@ -226,20 +219,22 @@ public class ClienteRestController {
 	@GetMapping("uploads/img/{nombreFoto:.+}")
 	public ResponseEntity<Resource> verFoto(@PathVariable String nombreFoto) {
 
-		Path rutaArchivo = Paths.get("uploads").resolve(nombreFoto).toAbsolutePath();
 		Resource recurso = null;
-		log.info(rutaArchivo.toString());
+		
 		try {
-			recurso = new UrlResource(rutaArchivo.toUri());
+			recurso = uploadService.cargar(nombreFoto);
 		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
-		if (!recurso.exists() && !recurso.isReadable()) {
-			throw new RuntimeException("Error no se pudo cargar la imagen:" + nombreFoto);
-		}
+		
 		HttpHeaders cabecera = new HttpHeaders();
 		cabecera.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + recurso.getFilename() + "\"");
 		return new ResponseEntity<Resource>(recurso, cabecera, HttpStatus.OK);
+	}
+	
+	@GetMapping("/clientes/regiones")
+	public List<Region> ListarRegiones() {
+		return clienteService.findAllRegiones();
 	}
 }

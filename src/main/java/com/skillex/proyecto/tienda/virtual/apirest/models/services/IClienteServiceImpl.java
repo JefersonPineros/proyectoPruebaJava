@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.skillex.proyecto.tienda.virtual.apirest.models.dao.IClienteDao;
 import com.skillex.proyecto.tienda.virtual.apirest.models.entity.Cliente;
+import com.skillex.proyecto.tienda.virtual.apirest.models.entity.Region;
 
 @Service
 public class IClienteServiceImpl implements IClienteService {
@@ -43,6 +44,12 @@ public class IClienteServiceImpl implements IClienteService {
 	@Override
 	public Cliente findById(Long id) {
 		return clienteDao.findById(id).orElse(null);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public List<Region> findAllRegiones() {
+		return clienteDao.findAllRegiones();
 	}
 
 }
