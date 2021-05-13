@@ -15,9 +15,9 @@ insert into clientes(nombre, apellidos, email, create_at, region_id) values ('An
 insert into roles (nombre) values ('ROLE_USER');
 insert into roles (nombre) values ('ROLE_ADMIN');
 
-insert into usuarios (username, password, enabled)  values ('Jeferson','$2a$10$AUzbriCtUyMe2un.v4Ee/.TrB7Ys4xO3o17To5gbuZ0xCjaDFhpdK',1);
-insert into usuarios (username, password, enabled)  values ('Sol','$2a$10$kWZGOoFzRaWk5NigzgvbR.GhnJaVK7ZDoCAWAh1SMZilp9Bi2RLwS',1);
+insert into usuarios (username, password, enabled, nombre, apellido, email)  values ('Jeferson','$2a$10$AUzbriCtUyMe2un.v4Ee/.TrB7Ys4xO3o17To5gbuZ0xCjaDFhpdK',1, 'Jeferson Armando', 'Piñeros Prieto', 'jeferson91pineros@gmail.com');
+insert into usuarios (username, password, enabled, nombre, apellido, email)  values ('Sol','$2a$10$kWZGOoFzRaWk5NigzgvbR.GhnJaVK7ZDoCAWAh1SMZilp9Bi2RLwS',1, 'Sol Angela', 'Contreras Cruz', 'key_angela@gmail.com');
 
-insert into users_roles (usuario_id, roll_id) values (1,1);
-insert into users_roles (usuario_id, roll_id) values (2,2);
-insert into users_roles (usuario_id, roll_id) values (2,1);
+insert into usuario_roles (usuario_id, role_id) values (1,1);
+insert into usuario_roles (usuario_id, role_id) values (2,2);
+insert into usuario_roles (usuario_id, role_id) values (2,1);

@@ -30,12 +30,17 @@ public class Usuario implements Serializable {
 	@Column(length = 60)
 	private String password;
 	private boolean enabled;
+	
+	private String nombre;
+	private String apellido;
+	
+	@Column(unique = true)
+	private String email;
 
 	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "usuario_id"),
-	inverseJoinColumns = @JoinColumn(name = "roll_id"),
-	uniqueConstraints = {@UniqueConstraint(columnNames = {"usuario_id", "roll_id"})})
-	private List<Roll> roles;
+	@JoinTable(name = "usuario_roles", joinColumns = @JoinColumn(name = "usuario_id"), inverseJoinColumns = @JoinColumn(name = "role_id"), uniqueConstraints = {
+			@UniqueConstraint(columnNames = { "usuario_id", "role_id" }) })
+	private List<Role> roles;
 
 	public Long getId() {
 		return id;
@@ -69,12 +74,36 @@ public class Usuario implements Serializable {
 		this.enabled = enabled;
 	}
 
-	public List<Roll> getRoles() {
+	public List<Role> getRoles() {
 		return roles;
 	}
 
-	public void setRoles(List<Roll> roles) {
+	public void setRoles(List<Role> roles) {
 		this.roles = roles;
+	}
+
+	public String getNombre() {
+		return nombre;
+	}
+
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
+
+	public String getApellido() {
+		return apellido;
+	}
+
+	public void setApellido(String apellido) {
+		this.apellido = apellido;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	/**

@@ -11,7 +11,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "roles")
-public class Roll implements Serializable {
+public class Role implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,15 +36,6 @@ public class Roll implements Serializable {
 		this.nombre = nombre;
 	}
 
-	public Roll() {
-		super();
-	}
-
-	public Roll(Long id, String nombre) {
-		super();
-		this.id = id;
-		this.nombre = nombre;
-	}
 
 	/**
 	 * 

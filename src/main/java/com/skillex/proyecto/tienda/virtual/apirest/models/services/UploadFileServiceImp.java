@@ -29,7 +29,7 @@ public class UploadFileServiceImp implements IUploadFileService {
 		Resource recurso =  new UrlResource(rutaArchivo.toUri());
 		
 		if (!recurso.exists() && !recurso.isReadable()) {
-			rutaArchivo = Paths.get("src/main/resources/static/images").resolve("no-usuario.png").toAbsolutePath();
+			rutaArchivo = Paths.get("src/main/resources/static/images").resolve("no-usuario.jpg").toAbsolutePath();
 			recurso = new UrlResource(rutaArchivo.toUri());
 			log.error("Error no se pudo cargar la imagen" + nombreFoto);
 		}

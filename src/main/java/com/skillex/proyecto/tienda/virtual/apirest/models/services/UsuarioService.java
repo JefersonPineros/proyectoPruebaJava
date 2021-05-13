@@ -19,7 +19,7 @@ import com.skillex.proyecto.tienda.virtual.apirest.models.dao.IUsuarioDao;
 import com.skillex.proyecto.tienda.virtual.apirest.models.entity.Usuario;
 
 @Service
-public class UsuarioService implements UserDetailsService {
+public class UsuarioService implements IUsuarioService, UserDetailsService {
 
 	private Logger log = LoggerFactory.getLogger(UsuarioService.class);
 	@Autowired
@@ -41,6 +41,13 @@ public class UsuarioService implements UserDetailsService {
 				.collect(Collectors.toList());
 		return new User(usuario.getUsername(), usuario.getPassword(), usuario.getEnabled(), true, true, true,
 				authorities);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public Usuario findByUsername(String username) {
+		// TODO Auto-generated method stub
+		return usuarioDao.findByUsername(username);
 	}
 
 }
